@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kesh Studio — Salon & Grooming House</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Reverie&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B1816;
+    --ink-soft:#28221F;
+    --paper:#EDE3D3;
+    --paper-dim:#D9CCB5;
+    --brass:#B8935A;
+    --brass-light:#D9B589;
+    --wine:#6E2E33;
+    --wine-light:#8C4247;
+    --line: rgba(237,227,211,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 32px;}
+  @media(max-width:640px){.wrap{padding:0 20px;}}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{outline:2px solid var(--brass-light);outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  /* ===== NAV ===== */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(27,24,22,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 32px; max-width:1160px; margin:0 auto;
+  }
+  .logo{font-family:'Fraunces',serif; font-size:22px; letter-spacing:0.02em;}
+  .logo em{font-style:italic; color:var(--brass-light);}
+  .nav-links{display:flex; gap:36px; font-size:14px; letter-spacing:0.03em; text-transform:uppercase;}
+  .nav-links a{opacity:0.8; transition:opacity 0.2s;}
+  .nav-links a:hover{opacity:1; color:var(--brass-light);}
+  .nav-cta{
+    border:1px solid var(--brass); padding:10px 22px; border-radius:2px;
+    font-size:13px; letter-spacing:0.05em; text-transform:uppercase;
+    transition:background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover{background:var(--brass); color:var(--ink);}
+  .menu-btn{display:none; background:none; border:none; color:var(--paper); font-size:24px; cursor:pointer;}
+  @media(max-width:800px){
+    .nav-links{display:none;}
+    .nav-cta{display:none;}
+    .menu-btn{display:block;}
+  }
+
+  /* ===== ANIMATED BRAND (shrinks & docks into nav on scroll) ===== */
+  #brandAnim{
+    position:fixed;
+    top:220px; left:50%;
+    transform:translateX(-50%);
+    font-family:'Fraunces',serif;
+    font-size:56px;
+    letter-spacing:0.01em;
+    white-space:nowrap;
+    z-index:200;
+    pointer-events:none;
+    will-change:top, left, font-size;
+  }
+  #brandAnim em{font-style:italic; color:var(--brass-light);}
+  @media(max-width:640px){#brandAnim{font-size:36px; top:150px;}}
+
+  /* ===== HERO ===== */
+  .hero{
+    min-height:100svh;
+    display:flex; align-items:center;
+    padding:140px 0 80px;
+    position:relative;
+    background:
+      radial-gradient(ellipse 900px 500px at 85% 15%, rgba(184,147,90,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 10% 90%, rgba(110,46,51,0.22), transparent 60%),
+      var(--ink);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:center;
+    width:100%;
+  }
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;}}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:10px;
+    font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--brass-light); margin-bottom:22px;
+  }
+  .eyebrow::before{content:'';width:26px;height:1px;background:var(--brass-light);}
+  .hero h1{
+    font-size:clamp(40px, 6vw, 68px);
+    line-height:1.04;
+    margin-bottom:24px;
+  }
+  .hero h1 .it{font-style:italic; color:var(--brass-light);}
+  .hero p.lead{
+    font-size:17px; color:var(--paper-dim); max-width:440px; margin-bottom:34px;
+  }
+  .btn-row{display:flex; gap:16px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--brass); color:var(--ink); padding:16px 30px;
+    font-size:14px; letter-spacing:0.04em; text-transform:uppercase; font-weight:600;
+    border-radius:2px; display:inline-flex; align-items:center; gap:10px;
+    transition:transform 0.2s, background 0.2s;
+  }
+  .btn-primary:hover{background:var(--brass-light); transform:translateY(-2px);}
+  .btn-ghost{
+    border:1px solid var(--line); padding:16px 30px; font-size:14px;
+    letter-spacing:0.04em; text-transform:uppercase; border-radius:2px;
+    transition:border-color 0.2s;
+  }
+  .btn-ghost:hover{border-color:var(--brass);}
+
+  .stat-row{display:flex; gap:40px; margin-top:56px; flex-wrap:wrap;}
+  .stat b{font-family:'Fraunces',serif; font-size:28px; display:block; color:var(--brass-light);}
+  .stat span{font-size:12.5px; color:var(--paper-dim); text-transform:uppercase; letter-spacing:0.05em;}
+
+  /* ==== TICKET CARD (signature element) ==== */
+  .ticket{
+    background:var(--ink-soft);
+    border:1px solid var(--line);
+    border-radius:6px;
+    position:relative;
+    padding:34px 30px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+  .ticket::before, .ticket::after{
+    content:''; position:absolute; width:26px; height:26px;
+    background:var(--ink); border-radius:50%;
+    top:50%; transform:translateY(-50%);
+  }
+  .ticket::before{left:-13px;}
+  .ticket::after{right:-13px;}
+  .ticket-divider{
+    border-top:1px dashed var(--line);
+    margin:22px 0;
+  }
+  .ticket-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;}
+  .ticket-head .display{font-size:20px;}
+  .ticket-head span{font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--brass-light);}
+  .ticket-sub{font-size:13px; color:var(--paper-dim);}
+  .ticket-row{display:flex; justify-content:space-between; font-size:14px; padding:9px 0; border-bottom:1px solid var(--line);}
+  .ticket-row:last-child{border-bottom:none;}
+  .ticket-row span:first-child{color:var(--paper-dim);}
+  .ticket-foot{margin-top:20px; text-align:center; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brass-light);}
+
+  /* ===== SECTION LABELS ===== */
+  .section{padding:110px 0;}
+  .section-tight{padding:80px 0;}
+  .label{
+    font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--brass-light); margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .label::before{content:'';width:26px;height:1px;background:var(--brass-light);}
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; gap:30px; margin-bottom:56px; flex-wrap:wrap;}
+  .section-head h2{font-size:clamp(28px,3.6vw,42px);}
+  .section-head p{color:var(--paper-dim); max-width:340px; font-size:15px;}
+
+  /* ===== SERVICES ===== */
+  .services{border-top:1px solid var(--line); background:var(--ink-soft);}
+  .service-list{display:flex; flex-direction:column;}
+  .service-row{
+    display:grid; grid-template-columns:56px 1fr auto auto;
+    align-items:center; gap:24px;
+    padding:26px 0; border-bottom:1px solid var(--line);
+    transition:padding-left 0.25s;
+  }
+  .service-row:hover{padding-left:10px;}
+  .service-row:hover .s-name{color:var(--brass-light);}
+  @media(max-width:680px){
+    .service-row{grid-template-columns:36px 1fr auto; row-gap:6px;}
+    .s-desc{grid-column:2/4; font-size:13px;}
+  }
+  .s-num{font-family:'Fraunces',serif; font-style:italic; color:var(--paper-dim); font-size:15px;}
+  .s-name{font-family:'Fraunces',serif; font-size:20px; transition:color 0.2s;}
+  .s-desc{color:var(--paper-dim); font-size:13.5px; margin-top:4px;}
+  .s-time{font-size:13px; color:var(--paper-dim); white-space:nowrap;}
+  .s-price{font-family:'Fraunces',serif; font-size:19px; color:var(--brass-light); white-space:nowrap;}
+
+  /* ===== GALLERY ===== */
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+  }
+  .g-item{
+    aspect-ratio:1; border-radius:4px; overflow:hidden; position:relative;
+    background:linear-gradient(135deg, var(--ink-soft), var(--wine) 140%);
+  }
+  .g-item:nth-child(2){aspect-ratio:1/1.5; grid-row:span 2;}
+  .g-item:nth-child(5){aspect-ratio:1/1.5; grid-row:span 2;}
+  .g-item span{
+    position:absolute; bottom:14px; left:14px; font-size:12px;
+    text-transform:uppercase; letter-spacing:0.08em; color:var(--paper-dim);
+  }
+  @media(max-width:800px){
+    .gallery-grid{grid-template-columns:repeat(2,1fr);}
+    .g-item:nth-child(2), .g-item:nth-child(5){grid-row:span 1; aspect-ratio:1;}
+  }
+
+  /* ===== STYLISTS ===== */
+  .stylist-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:30px;}
+  @media(max-width:800px){.stylist-grid{grid-template-columns:1fr;}}
+  .stylist-card{border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .stylist-photo{aspect-ratio:4/5; background:linear-gradient(160deg,var(--ink-soft),var(--wine) 160%);}
+  .stylist-info{padding:20px 22px 26px;}
+  .stylist-info h3{font-size:19px; margin-bottom:4px;}
+  .stylist-info .role{font-size:12.5px; color:var(--brass-light); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;}
+  .stylist-info p{font-size:13.5px; color:var(--paper-dim);}
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials{background:var(--ink-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .t-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line);}
+  .t-card{background:var(--ink-soft); padding:36px 30px;}
+  @media(max-width:800px){.t-grid{grid-template-columns:1fr;}}
+  .t-quote{font-family:'Fraunces',serif; font-style:italic; font-size:18px; line-height:1.5; margin-bottom:18px;}
+  .t-name{font-size:13px; color:var(--brass-light); text-transform:uppercase; letter-spacing:0.05em;}
+
+  /* ===== BOOKING ===== */
+  .booking{
+    background:linear-gradient(150deg, var(--wine) 0%, var(--ink) 55%);
+    border-top:1px solid var(--line);
+  }
+  .booking-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;}
+  @media(max-width:900px){.booking-grid{grid-template-columns:1fr;}}
+  .form-group{margin-bottom:18px;}
+  .form-group label{display:block; font-size:12.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--paper-dim); margin-bottom:8px;}
+  .form-group input, .form-group select{
+    width:100%; background:rgba(237,227,211,0.06); border:1px solid var(--line);
+    color:var(--paper); padding:13px 14px; border-radius:3px; font-family:'Inter',sans-serif; font-size:14.5px;
+  }
+  .form-group input::placeholder{color:rgba(237,227,211,0.35);}
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+  .submit-btn{
+    width:100%; background:var(--brass); color:var(--ink); border:none; padding:16px;
+    font-size:14px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600;
+    border-radius:3px; cursor:pointer; margin-top:8px; transition:background 0.2s;
+  }
+  .submit-btn:hover{background:var(--brass-light);}
+  .booking-note{font-size:13px; color:var(--paper-dim); margin-top:14px;}
+
+  /* ===== FOOTER ===== */
+  footer{padding:60px 0 40px; border-top:1px solid var(--line);}
+  .footer-grid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:30px; margin-bottom:40px;}
+  .footer-col h4{font-size:13px; text-transform:uppercase; letter-spacing:0.06em; color:var(--brass-light); margin-bottom:14px;}
+  .footer-col p, .footer-col a{font-size:14px; color:var(--paper-dim); display:block; margin-bottom:8px;}
+  .footer-bottom{display:flex; justify-content:space-between; padding-top:24px; border-top:1px solid var(--line); font-size:12.5px; color:var(--paper-dim); flex-wrap:wrap; gap:10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo" id="logoTarget" style="visibility:hidden;">Kesh <em>Studio</em></div>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#team">Stylists</a>
+      <a href="#reviews">Reviews</a>
+    </div>
+    <a href="#book" class="nav-cta">Book a Slot</a>
+    <button class="menu-btn" aria-label="Menu">☰</button>
+  </nav>
+</header>
+
+<div id="brandAnim">Kesh <em>Studio</em></div>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Ahmedabad · Est. 2019</div>
+      <h1>Where every <span class="it">cut</span> tells a story worth booking again</h1>
+      <p class="lead">A grooming house for people who treat their hair like it matters — precision cuts, colour work, and skin care from stylists who trained for it.</p>
+      <div class="btn-row">
+        <a href="#book" class="btn-primary">Reserve Your Chair →</a>
+        <a href="#services" class="btn-ghost">View Services</a>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><b>4.9</b><span>Google Rating</span></div>
+        <div class="stat"><b>6,200+</b><span>Happy Clients</span></div>
+        <div class="stat"><b>7 Yrs</b><span>In the City</span></div>
+      </div>
+    </div>
+
+    <div class="ticket">
+      <div class="ticket-head">
+        <span class="display">Admit One</span>
+        <span>Walk-in Pass</span>
+      </div>
+      <div class="ticket-sub">Kesh Studio — Today's opening slots</div>
+      <div class="ticket-divider"></div>
+      <div class="ticket-row"><span>11:30 AM</span><span>Haircut + Beard</span></div>
+      <div class="ticket-row"><span>2:00 PM</span><span>Global Colour</span></div>
+      <div class="ticket-row"><span>4:15 PM</span><span>Keratin Spa</span></div>
+      <div class="ticket-row"><span>6:45 PM</span><span>Bridal Trial</span></div>
+      <div class="ticket-divider"></div>
+      <div class="ticket-foot">Tap below to lock your slot</div>
+    </div>
+  </div>
+</section>
+
+<section class="services section" id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="label">The Menu</div>
+        <h2>Services & Pricing</h2>
+      </div>
+      <p>Every service ends with a hot-towel finish — on the house, not the bill.</p>
+    </div>
+
+    <div class="service-list">
+      <div class="service-row">
+        <span class="s-num">01</span>
+        <div><div class="s-name">Signature Haircut</div><div class="s-desc">Consultation, wash, precision cut, style</div></div>
+        <span class="s-time">45 min</span>
+        <span class="s-price">₹399</span>
+      </div>
+      <div class="service-row">
+        <span class="s-num">02</span>
+        <div><div class="s-name">Beard Sculpt & Shave</div><div class="s-desc">Hot towel, straight razor line-up, aftercare</div></div>
+        <span class="s-time">30 min</span>
+        <span class="s-price">₹249</span>
+      </div>
+      <div class="service-row">
+        <span class="s-num">03</span>
+        <div><div class="s-name">Global Colour</div><div class="s-desc">Ammonia-free colour, full head application</div></div>
+        <span class="s-time">90 min</span>
+        <span class="s-price">₹1,899</span>
+      </div>
+      <div class="service-row">
+        <span class="s-num">04</span>
+        <div><div class="s-name">Keratin Smoothening</div><div class="s-desc">Frizz-control treatment, up to 4 months</div></div>
+        <span class="s-time">120 min</span>
+        <span class="s-price">₹3,499</span>
+      </div>
+      <div class="service-row">
+        <span class="s-num">05</span>
+        <div><div class="s-name">Bridal Trial</div><div class="s-desc">Hair + makeup trial run, includes consultation</div></div>
+        <span class="s-time">150 min</span>
+        <span class="s-price">₹2,199</span>
+      </div>
+      <div class="service-row">
+        <span class="s-num">06</span>
+        <div><div class="s-name">Express Facial</div><div class="s-desc">Deep cleanse, de-tan, hydration mask</div></div>
+        <span class="s-time">40 min</span>
+        <span class="s-price">₹699</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="gallery">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="label">Recent Work</div>
+        <h2>From the Chair</h2>
+      </div>
+      <p>A look at what walked out the door this month.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="g-item"><span>Fade & Line-up</span></div>
+      <div class="g-item"><span>Balayage</span></div>
+      <div class="g-item"><span>Classic Crop</span></div>
+      <div class="g-item"><span>Bridal Updo</span></div>
+      <div class="g-item"><span>Beard Sculpt</span></div>
+      <div class="g-item"><span>Global Colour</span></div>
+      <div class="g-item"><span>Textured Crop</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight" id="team">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="label">Behind the Chair</div>
+        <h2>Meet the Stylists</h2>
+      </div>
+      <p>Every stylist here trained under a master barber before touching a client.</p>
+    </div>
+    <div class="stylist-grid">
+      <div class="stylist-card">
+        <div class="stylist-photo"></div>
+        <div class="stylist-info">
+          <h3>Rohan Mehta</h3>
+          <div class="role">Senior Stylist · 9 yrs</div>
+          <p>Specialises in textured crops and beard sculpting.</p>
+        </div>
+      </div>
+      <div class="stylist-card">
+        <div class="stylist-photo"></div>
+        <div class="stylist-info">
+          <h3>Priya Nair</h3>
+          <div class="role">Colour Specialist · 6 yrs</div>
+          <p>Balayage, global colour, and bridal hair design.</p>
+        </div>
+      </div>
+      <div class="stylist-card">
+        <div class="stylist-photo"></div>
+        <div class="stylist-info">
+          <h3>Arjun Shah</h3>
+          <div class="role">Grooming Expert · 5 yrs</div>
+          <p>Straight-razor shaves and skin treatments.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials" id="reviews">
+  <div class="wrap section-tight">
+    <div class="section-head" style="margin-bottom:40px;">
+      <div>
+        <div class="label">Client Word</div>
+        <h2>What Walks Out the Door</h2>
+      </div>
+    </div>
+  </div>
+  <div class="t-grid">
+    <div class="t-card">
+      <div class="t-quote">"Been coming here for two years. Rohan remembers exactly how I like my fade without me saying a word."</div>
+      <div class="t-name">— Kunal D.</div>
+    </div>
+    <div class="t-card">
+      <div class="t-quote">"Did my bridal trial here and locked it on the spot. Priya understood the vision instantly."</div>
+      <div class="t-name">— Sneha P.</div>
+    </div>
+    <div class="t-card">
+      <div class="t-quote">"Booked online, walked in, walked out in 40 minutes. No waiting, no chaos. Rare for a salon."</div>
+      <div class="t-name">— Aditya R.</div>
+    </div>
+  </div>
+</section>
+
+<section class="booking section" id="book">
+  <div class="wrap booking-grid">
+    <div>
+      <div class="label">Reserve Your Chair</div>
+      <h2 style="font-size:clamp(28px,3.6vw,40px); margin-bottom:18px;">Book in under a minute</h2>
+      <p style="color:var(--paper-dim); max-width:400px; margin-bottom:20px;">Pick a service and time, and we'll confirm your slot over WhatsApp within minutes — no account needed.</p>
+      <p class="booking-note">📍 SG Highway, Ahmedabad &nbsp; · &nbsp; Open 10 AM – 8:30 PM &nbsp; · &nbsp; Closed Tuesdays</p>
+    </div>
+
+    <form id="bookingForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" placeholder="Full name" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="10-digit number" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="service">Service</label>
+        <select id="service">
+          <option>Signature Haircut — ₹399</option>
+          <option>Beard Sculpt & Shave — ₹249</option>
+          <option>Global Colour — ₹1,899</option>
+          <option>Keratin Smoothening — ₹3,499</option>
+          <option>Bridal Trial — ₹2,199</option>
+          <option>Express Facial — ₹699</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">Preferred Date</label>
+          <input type="date" id="date" required>
+        </div>
+        <div class="form-group">
+          <label for="time">Preferred Time</label>
+          <input type="time" id="time" required>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn">Confirm on WhatsApp →</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Kesh Studio</h4>
+        <p style="max-width:220px;">A grooming house on SG Highway, Ahmedabad. Precision cuts and colour work since 2019.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Visit</h4>
+        <p>SG Highway, Ahmedabad</p>
+        <p>10 AM – 8:30 PM, Tue closed</p>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="tel:+919999999999">+91 99999 99999</a>
+        <a href="#">WhatsApp Us</a>
+      </div>
+      <div class="footer-col">
+        <h4>Follow</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Google Reviews</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Kesh Studio. All rights reserved.</span>
+      <span>Design template — built for demo purposes</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== Brand shrink-and-dock animation on scroll =====
+  const brand = document.getElementById('brandAnim');
+  const target = document.getElementById('logoTarget');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const START_FONT = window.innerWidth <= 640 ? 36 : 56;
+  const END_FONT = 22;
+  const SCROLL_DISTANCE = 320; // itna scroll karne pe animation 100% complete ho jayega
+
+  function updateBrand(){
+    const rect = target.getBoundingClientRect();
+    let p = Math.min(Math.max(window.scrollY / SCROLL_DISTANCE, 0), 1); // progress 0 to 1
+
+    const startTop = window.innerWidth <= 640 ? 150 : 220;
+    const startLeftCenter = window.innerWidth / 2;
+
+    const fontSize = START_FONT + (END_FONT - START_FONT) * p;
+    const top = startTop + (rect.top - startTop) * p;
+    const left = startLeftCenter + (rect.left - startLeftCenter) * p;
+    const translateX = -50 + 50 * p; // center-anchored to left-anchored
+
+    brand.style.fontSize = fontSize + 'px';
+    brand.style.top = top + 'px';
+    brand.style.left = left + 'px';
+    brand.style.transform = `translateX(${translateX}%)`;
+  }
+
+  if(prefersReducedMotion){
+    // Motion kam pasand karne walo ke liye seedha docked state dikhado, no animation
+    window.addEventListener('load', () => { window.scrollTo(0,0); updateBrand(); });
+    brand.style.transition = 'none';
+  } else {
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if(!ticking){
+        requestAnimationFrame(() => { updateBrand(); ticking = false; });
+        ticking = true;
+      }
+    });
+  }
+  window.addEventListener('resize', updateBrand);
+  updateBrand();
+
+  document.getElementById('bookingForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    const service = document.getElementById('service').value;
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const msg = `Hi Kesh Studio! I'd like to book:%0A%0AName: ${name}%0APhone: ${phone}%0AService: ${service}%0ADate: ${date}%0ATime: ${time}`;
+    window.open(`https://wa.me/919999999999?text=${msg}`, '_blank');
+  });
+</script>
+
+</body>
+</html>
